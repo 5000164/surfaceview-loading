@@ -14,6 +14,7 @@ public class LoadingSurfaceView extends SurfaceView implements Runnable, Surface
 
     int mViewWidth;
     int mViewHeight;
+    int mMaxRadius;
 
     static final long FPS = 60;
     static final long FRAME_TIME = 1000 / FPS;
@@ -57,8 +58,7 @@ public class LoadingSurfaceView extends SurfaceView implements Runnable, Surface
 
                 this.mSurfaceHolder.unlockCanvasAndPost(canvas);
 
-                // ピタゴラスの定理より、円が画面外に出たら初期化
-                if (circleSize > Math.sqrt(Math.pow(this.mViewWidth, 2) + Math.pow(this.mViewHeight, 2))) {
+                if (circleSize > this.mMaxRadius) {
                     circleSize = 10;
                     Thread.sleep(300);
                 } else {
@@ -82,6 +82,10 @@ public class LoadingSurfaceView extends SurfaceView implements Runnable, Surface
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         this.mViewWidth = width;
         this.mViewHeight = height;
+
+        // 円が画面外に出たら初期化するため
+        // ピタゴラスの定理より、半径の最大値を計算
+        this.mMaxRadius = (int) Math.ceil(Math.sqrt(Math.pow(this.mViewWidth, 2) + Math.pow(this.mViewHeight, 2)));
     }
 
     @Override
